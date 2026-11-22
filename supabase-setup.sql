@@ -11,6 +11,10 @@ create table if not exists public.tasks (
 
 alter table public.tasks enable row level security;
 
+-- seuls les comptes connectés peuvent utiliser la table (et uniquement leurs lignes, voir plus bas)
+revoke all on public.tasks from anon;
+grant select, insert, update, delete on public.tasks to authenticated;
+
 create policy "lire mes taches" on public.tasks
   for select using (auth.uid() = user_id);
 create policy "ajouter mes taches" on public.tasks
